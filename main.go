@@ -1,29 +1,46 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"gps/pkg"
-	"gps/scraper"
+	"net/http"
+	"os"
+
+	"github.com/fatih/color"
 )
 
 const (
-	goDocURL string = "https://godoc.org/?q="
+	goDocURL string = "https://api.godoc.org/search?&q="
 )
 
 var searchTerm string
 
-func init() {
-	const (
-		defaultValue = "gorilla"
-		usage        = "A package search term you are looking for"
-	)
-	flag.StringVar(&searchTerm, "find", defaultValue, usage)
-	flag.StringVar(&searchTerm, "f", defaultValue, usage+" (shorthand)")
-}
-
 func main() {
-	res := scraper.BuildResults(goDocURL, "twitter")
-	pkgs := pkg.BuildPackageList(res)
+	if len(os.Args) < 2 {
+		color.Set(color.FgRed)
+		fmt.Println("Usage: gps [search term]")
+		color.Unset()
+		os.Exit(1)
+	} else if len(os.Args) > 2 {
+		color.Set(color.FgHiBlue)
+		fmt.Println("Usage: 'gps [search term]' :: Limit to one search term")
+		color.Unset()
+		os.Exit(1)
+	}
 
-	pkg.PrintPackageList(pkgs)
+	searchTerm = os.Args[1]
+
+	resp, err := http.Get(goDocURL + searchTerm)
+	if err != nil {
+		fmt.Printf("not able to receive response: %v", err)
+	}
+
+	pkgs := pkg.BuildPackageList(resp)
+
+	fmt.Println("")
+	for i, ii := range pkgs.Results {
+		fmt.Println("Entry: ", i+1)
+		ii.PrintPackage()
+	}
+
 }
