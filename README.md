@@ -4,7 +4,9 @@ Go Package search (gps) provides a means to search godoc.org via the command-lin
 
 ## Usage
 To use, simply call the program and provide a search term.  
+  
 ```gps [search-term]```  
+  
 That's it!
 
 As an example:
