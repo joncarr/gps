@@ -13,6 +13,8 @@ As an example:
   
 ```gps twitter```  
   
+  ![gps image](https://raw.githubusercontent.com/joncarr/gps/master/extras/gps_screen.png)
+  
 You will be provided the results of the search in your terminal.  Each search result has an entry number associated with it. Just enter the entry number, hit `enter` and the package will install. You may also enter `q` to quit the program if you do not want to install anything and want to quit the program.
 
 ## Future "Maybes"
