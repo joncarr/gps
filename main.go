@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"gps/pkg"
 	"net/http"
 	"os"
+	"os/exec"
+	"strconv"
+	"strings"
 
 	"github.com/fatih/color"
 )
@@ -42,5 +46,29 @@ func main() {
 		fmt.Println("Entry: ", i+1)
 		ii.PrintPackage()
 	}
+
+	fmt.Println("")
+	color.Set(color.FgHiGreen)
+	fmt.Print("Entry number to install (or enter \"q\" to quit): ")
+	color.Unset()
+	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+	var entry int
+	if input == "q\n" {
+		os.Exit(0)
+	} else {
+		entry, err = strconv.Atoi(strings.TrimSpace(input))
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	cmd := exec.Command("go", "get", pkgs.Results[entry-1].Path)
+	color.Set(color.FgMagenta)
+	fmt.Println("Installing:", pkgs.Results[entry-1].Path)
+	color.Unset()
+	cmd.Run()
 
 }
