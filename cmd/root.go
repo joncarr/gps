@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 		It's extremely easy to use!  Just use:
 
 		**************************************
-		gps find [search-term]
+		gps find [search-term] [flag] [option]
 		**************************************
 
 		You will be able to install the packages directly from the terminal once provided
