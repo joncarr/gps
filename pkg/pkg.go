@@ -23,6 +23,30 @@ type PackageList struct {
 	Results []PKG `json:"results"`
 }
 
+// Len returns the length of the package list
+func (p *PackageList) Len() int { return len(p.Results) }
+
+func (p *PackageList) swap(i, j int) { p.Results[i], p.Results[j] = p.Results[j], p.Results[i] }
+
+// Sort the package list according to the provided criteria
+// TODO: make criteria some const
+// "alpha" : sort alphabetically by package name
+// "score" : sort by score
+// "stars" : sort by stars
+// "imports" : sort by imports
+func (p *PackageList) Sort(criteria string) {
+	switch criteria {
+	case "alpha":
+		alphaSort(p)
+	case "score":
+		scoreSort(p)
+	case "stars":
+		starSort(p)
+	case "imports":
+		importSort(p)
+	}
+}
+
 // PrintPackage prints the package information
 func (p *PKG) PrintPackage() {
 
@@ -69,4 +93,44 @@ func BuildPackageList(d *http.Response) PackageList {
 
 	return pkgs
 
+}
+
+func alphaSort(p *PackageList) {
+	for i := 0; i < p.Len(); i++ {
+		for j := 0; j < p.Len()-1; j++ {
+			if p.Results[j].Name > p.Results[j+1].Name {
+				p.swap(j, j+1)
+			}
+		}
+	}
+}
+
+func scoreSort(p *PackageList) {
+	for i := 0; i < p.Len(); i++ {
+		for j := 0; j < p.Len()-1; j++ {
+			if p.Results[j].Score < p.Results[j+1].Score {
+				p.swap(j, j+1)
+			}
+		}
+	}
+}
+
+func starSort(p *PackageList) {
+	for i := 0; i < p.Len(); i++ {
+		for j := 0; j < p.Len()-1; j++ {
+			if p.Results[j].Stars < p.Results[j+1].Stars {
+				p.swap(j, j+1)
+			}
+		}
+	}
+}
+
+func importSort(p *PackageList) {
+	for i := 0; i < p.Len(); i++ {
+		for j := 0; j < p.Len()-1; j++ {
+			if p.Results[j].ImportCount < p.Results[j+1].ImportCount {
+				p.swap(j, j+1)
+			}
+		}
+	}
 }
