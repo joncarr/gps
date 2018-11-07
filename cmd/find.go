@@ -18,6 +18,7 @@ var (
 	searchTerm string
 	limitOpt   = 100
 	sortOpt    = "imports"
+	loopFor    = 0
 )
 
 // findCmd represents the find command
@@ -38,7 +39,15 @@ var findCmd = &cobra.Command{
 		pkgs := pkg.BuildPackageList(resp)
 		pkgs.Sort(sortOpt)
 
-		for i := 0; i < limitOpt; i++ {
+		numOfPkgs := len(pkgs.Results)
+
+		if numOfPkgs < limitOpt {
+			loopFor = numOfPkgs
+		} else {
+			loopFor = limitOpt
+		}
+
+		for i := 0; i < loopFor; i++ {
 			fmt.Println("Entry: ", i+1)
 			pkgs.Results[i].PrintPackage()
 		}
